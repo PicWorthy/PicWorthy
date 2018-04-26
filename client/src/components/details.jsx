@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
-import FaIconPack, {FaStarO, FaStar, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
+import FaIconPack, {FaHeartO, FaStar, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
 
 const getPic = (url, pics) => {
   for (const pic of pics) {
@@ -14,19 +14,19 @@ const getPic = (url, pics) => {
 const DisplayStar = ({ pic, handleStarClick, isStarred }) => {
   if (isStarred) {
     return (
-      <FaStar
-        style={ iconStyle }
+      <FaHeart 
+        style={ iconStyle } 
         size={ 40 }
       />
     )
 
   } else {
     return (
-      <FaStarO
-        style={ iconStyle }
-        size={ 40 }
-        onClick={ (e) => handleStarClick(e, pic) }
-      />
+      <FaHeartO
+        style={ iconStyle } 
+        size={ 40 } 
+        onClick={ (e) => handleStarClick(e, pic) } 
+      /> 
     );
   }
 }

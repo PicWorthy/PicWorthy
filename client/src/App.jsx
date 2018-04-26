@@ -51,6 +51,7 @@ export default class App extends Component {
         this.setState({userData: result.data}));
   }
   
+  //
   navbarHandleClose() {
     this.setState({ 
       showLogin: false,
