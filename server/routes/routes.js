@@ -15,4 +15,8 @@ router.get('/api/closestPics', controller.get.closestPics);
 
 router.post('/api/favorites', controller.post.favorites);
 
+router.delete('/api/deletePic', controller.del.deletePic);
+
+router.patch('/api/modifyPicDetails', controller.patch.modifyPicDetails);
+
 module.exports = router;

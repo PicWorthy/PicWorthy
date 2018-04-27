@@ -11,16 +11,16 @@ db.fetchUser = (username) =>  models.Users.findOne({username: username});
 
 db.saveUser = (obj) => {
   return db.fetchUser(obj.username)
-  
+
   .then((user) => {
-    
+
     if (user === null) {
       const saltRounds = 10;
       return bcrypt.genSaltAsync(saltRounds)
-      
+
       .then ((salt) => {
         return bcrypt.hashAsync(obj.password, salt, null)
-        
+
         .then ((hash) => {
           obj.password = hash;
           return models.Users.create({
@@ -33,11 +33,11 @@ db.saveUser = (obj) => {
           });
         })
 
-        .catch((err) => 
+        .catch((err) =>
           console.log(err)
         )
-    }) 
-    
+    })
+
   } else {
       return false;
     }
@@ -70,7 +70,7 @@ db.savePictureToUser = (data) =>
 
 const MAX_DISTANCE = 20000000;
 
-db.selectClosestPictures = (location) => 
+db.selectClosestPictures = (location) =>
   models.Pictures.aggregate(
     [
       {$geoNear: {
@@ -87,10 +87,55 @@ db.selectClosestPictures = (location) =>
     ]
   );
 
-db.addToFavorites = (data) => 
+db.addToFavorites = (data) =>
   models.Users.update(
     {_id: data.user_id},
     {$push: { likes: data}}
   );
+
+db.deletePic = (imageURL) => {
+  console.log(imageURL);
+  return models.Pictures.remove({
+    imageURL: imageURL
+  }, function(err) {
+    return err;
+  });
+}
+
+db.deletePicFromUser = (username, imageURL) => {
+  console.log(username);
+  console.log(imageURL);
+  return models.Users.update(
+    {},
+    {$pull: {photos: {imageURL: imageURL}}
+  }, function(err) {
+      if(err) {
+        console.log('Got an error!!!');
+      }
+    });
+}
+
+db.modifyPic = (imageURL, location, description) => {
+  return models.Pictures.update({imageURL: imageURL}, {
+    location: location,
+    description: description
+  }, function(err) {
+      if(err) {
+        console.log('Got an error!');
+      }
+  });
+}
+
+db.modifyUserPic = (username, imageURL, location, description) => {
+  return models.Users.update({username: username, "photos.imageURL": imageURL}, {$set:
+    {
+      "photos.$.location": location,
+      "photos.$.description": description
+   }}, function(err) {
+    if(err) {
+      console.log('Got an error!');
+    }
+  });
+}
 
 module.exports = db;
