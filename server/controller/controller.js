@@ -3,6 +3,8 @@ const passport = require('../middleware/passport.js');
 
 const post = {};
 const get = {};
+const del = {};
+const patch = {};
 
 post.signup = (req, res) => {
   db.saveUser(req.body)
@@ -13,10 +15,10 @@ post.signup = (req, res) => {
 
 post.login = (req, res, next) => {
   passport.authenticate('local', function (err, user, info) {
-    
+
     if (err || !user) {
       res.status(422).send(info);
-    
+
     } else {
 
       user.password = undefined;
@@ -41,13 +43,13 @@ get.logout = (req, res) => {
 }
 
 get.user = (req, res) => {
-  
+
   if (req.user) {
     db.fetchUser(req.user.username).then(user => res.json(user));
   }
 }
 
-post.upload = (req, res) => 
+post.upload = (req, res) =>
   db.savePicture(req.body)
     .then((data) => db.savePictureToUser(req.body))
     .then(() => res.end())
@@ -73,7 +75,33 @@ post.favorites = function(req, res) {
     })
 }
 
-  
+del.deletePic = function(req, res) {
+  db.deletePic(req.body.imageURL)
+  .then(() => {
+    db.deletePicFromUser(req.body.username, req.body.imageURL)
+  })
+  .then(() => {
+    res.sendStatus(200);
+  })
+  .catch((err) => {
+    res.sendStatus(404).send('Error deleting pic');
+  })
+}
 
+patch.modifyPicDetails = function(req, res) {
+  db.modifyUserPic(req.body.username, req.body.imageURL, req.body.location, req.body.description)
+  .then(() => {
+    db.modifyPic(req.body.imageURL, req.body.location, req.body.description)
+  })
+  .then(() => {
+    res.sendStatus(200);
+  })
+  .catch((err) => {
+    return 'Error!';
+  })
+}
+
+module.exports.patch = patch;
+module.exports.del = del;
 module.exports.get = get;
 module.exports.post = post;
