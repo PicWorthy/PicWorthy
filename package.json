@@ -58,7 +58,8 @@
     "react-password-mask": "^3.3.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-spinners": "^0.3.2"
+    "react-spinners": "^0.3.2",
+    "react-star-rating-component": "^1.4.1"
   },
   "devDependencies": {
     "babel": "^6.23.0",

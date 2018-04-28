@@ -165,7 +165,8 @@ export default class Locations extends Component {
     this.updateDisplayAmount = this.updateDisplayAmount.bind(this);
     this.getUserLocation = getUserLocation.bind(this);
     this.showHideDetails = showHideDetails.bind(this);
-    this.handleStarClick = this.handleStarClick.bind(this);
+    this.onStarClick = this.onStarClick.bind(this);
+    this.handleHeartClick = this.handleHeartClick.bind(this);
     this.rotatePics = this.rotatePics.bind(this);
     this.rotatePicsLocation = rotatePicsLocation.bind(this);
     this.rotatePicsUserpage = rotatePicsUserpage.bind(this);
@@ -210,21 +211,73 @@ export default class Locations extends Component {
       .then((result) => this.setState({userData: result.data}));
   }
 
-  handleStarClick(e, { category, location, imageURL, description, loc}) {
+  
+  onStarClick (nextValue, prevValue, name, e) {
+    const getPic = (url, pics) => {
+      for (const pic of pics) {
+        if (pic.imageURL === url) {
+          return pic;
+        }
+      }
+      return 'NOT_FOUND';
+    }
 
-    axios.post('/api/favorites', {
+    let pic = getPic(this.state.detailedPicURL, this.state.userData.photos);
+    pic.rating = nextValue;
+    let {category, location, imageURL, description, latLng, rating} = pic;
+    
+    axios.post('/api/starred', {
       category,
       location,
       imageURL,
       description,
+      rating,
       user_id: this.state.userData._id,
       username: this.state.userData.username,
       latLng: {
-        lat: loc.coordinates[1],
-        lng: loc.coordinates[0]
+        lat: latLng.lat,
+        lng: latLng.lng
       }
     })
-      .then(({data}) => this.setState({userData: data}))
+      .then(({data}) => this.setState({userData: data}));
+  }
+
+  
+
+  handleHeartClick(e, { category, location, imageURL, description, latLng, rating}, beDeleted) {
+    rating = rating ? rating : 0;
+
+    if(beDeleted){
+      axios.post('/api/unfavorite', {
+        category,
+        location,
+        imageURL,
+        description,
+        rating,
+        user_id: this.state.userData._id,
+        username: this.state.userData.username,
+        latLng: {
+          lat: latLng.lat,
+          lng: latLng.lng
+        }
+      })
+        .then(({data}) => this.setState({userData: data}))
+    } else {
+      axios.post('/api/favorites', {
+        category,
+        location,
+        imageURL,
+        description,
+        rating,
+        user_id: this.state.userData._id,
+        username: this.state.userData.username,
+        latLng: {
+          lat: latLng.lat,
+          lng: latLng.lng
+        }
+      })
+        .then(({data}) => this.setState({userData: data}))
+    }
   }
 
   rotatePics(e, direction) {
@@ -271,9 +324,10 @@ export default class Locations extends Component {
           detailedPicURL={ this.state.detailedPicURL }
           pics={ this.state.userData.photos }
           showHideDetails={ this.showHideDetails }
-          handleStarClick={ this.handleStarClick }
+          handleHeartClick={ this.handleHeartClick }
           userFavorites={ this.state.userData.likes }
           refreshUser={ this.refreshUser.bind(this) }
+          onStarClick={this.onStarClick}
         />
 
       </div>
@@ -307,8 +361,9 @@ export default class Locations extends Component {
           detailedPicURL={ this.state.detailedPicURL }
           pics={ this.state.userData.likes }
           showHideDetails={ this.showHideDetails }
-          handleStarClick={ this.handleStarClick }
+          handleHeartClick={ this.handleHeartClick }
           userFavorites={ this.state.userData.likes }
+          onStarClick={this.onStarClick}
         />
       </div>
     )
@@ -350,10 +405,11 @@ export default class Locations extends Component {
         <Row style={rowStyle}>
           <Details
             detailedPicURL={ this.state.detailedPicURL }
-            pics={ this.state.pics }
+            pics={ this.state.userData.photos }
             showHideDetails={ this.showHideDetails }
-            handleStarClick={ this.handleStarClick }
+            handleHeartClick={ this.handleHeartClick }
             userFavorites={ this.state.userData.likes }
+            onStarClick={this.onStarClick}
           />
         </Row>
       </Grid>

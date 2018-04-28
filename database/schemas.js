@@ -6,7 +6,8 @@ const UserSchema = mongoose.Schema({
   username: String,
   password: String,
   photos: [{}],
-  likes: [{}]
+  likes: [{}],
+  ratings: [{}],
 });
 
 const PictureSchema = new mongoose.Schema({
