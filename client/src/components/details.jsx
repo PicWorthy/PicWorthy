@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
-import FaIconPack, {FaHeartO, FaStar, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
+import FaIconPack, {FaHeartO, FaHeart, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
+import StarRatingComponent from 'react-star-rating-component';
 
 const getPic = (url, pics) => {
   for (const pic of pics) {
@@ -11,21 +12,25 @@ const getPic = (url, pics) => {
   return 'NOT_FOUND';
 }
 
-const DisplayStar = ({ pic, handleStarClick, isStarred }) => {
+const DisplayStar = ({ pic, handleHeartClick, isStarred }) => {
   if (isStarred) {
+    console.log(pic);
     return (
       <FaHeart 
+        starred='true'
         style={ iconStyle } 
         size={ 40 }
+        onClick={ (e) => handleHeartClick(e, pic, true) }
       />
     )
 
   } else {
     return (
       <FaHeartO
+        starred='false'
         style={ iconStyle } 
         size={ 40 } 
-        onClick={ (e) => handleStarClick(e, pic) } 
+        onClick={ (e) => handleHeartClick(e, pic, false) } 
       /> 
     );
   }
@@ -68,8 +73,14 @@ export default class Details extends Component {
   }
 
   render() {
+<<<<<<< HEAD
 
     const { detailedPicURL, pics, userFavorites, showHideDetails, handleStarClick } = this.props
+=======
+    
+    const { detailedPicURL, pics, userFavorites, showHideDetails, handleHeartClick, onStarClick} = this.props 
+
+>>>>>>> Adds rating system
 
     let pic = getPic(detailedPicURL, pics);
 
@@ -79,6 +90,7 @@ export default class Details extends Component {
 
     const isStarred = checkFavorites(userFavorites.map((p) => p.imageURL), pic.imageURL)
 
+    const {rating} = pic;
 
     return (
       <div>
@@ -92,9 +104,15 @@ export default class Details extends Component {
 
           <Row>
 
+<<<<<<< HEAD
             <Col
               md={ 6 }
               mdPush={ 6 }
+=======
+            <Col 
+              md={ 6 } 
+              mdPush={ 6 } 
+>>>>>>> Adds rating system
               style={ {paddingRight: `100px`} }
             >
 
@@ -114,7 +132,7 @@ export default class Details extends Component {
 
               <DisplayStar
                 pic={ pic }
-                handleStarClick={ handleStarClick }
+                handleHeartClick={ handleHeartClick }
                 isStarred={ isStarred }
               />
               {/*
@@ -149,6 +167,22 @@ export default class Details extends Component {
                   style ={ imgStyle }
                 />
               </span>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md ={6}
+                 mdOffset={6}
+            >
+            <h4>
+              Rating:
+            </h4>
+              <StarRatingComponent
+                  name='picrating' /* name of the radio input, it is required */
+                  value={ rating } /* number of selected icon (`0` - none, `1` - first) */
+                  starCount={ 5 } /* number of icons in rating, default `5` */
+                  onStarClick={ onStarClick } /* on icon click handler */
+              />
             </Col>
           </Row>
         </Grid>
