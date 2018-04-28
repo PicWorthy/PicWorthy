@@ -75,7 +75,6 @@ post.favorites = function(req, res) {
     })
 }
 
-<<<<<<< HEAD
 del.deletePic = function(req, res) {
   db.deletePic(req.body.imageURL)
   .then(() => {
@@ -101,7 +100,6 @@ patch.modifyPicDetails = function(req, res) {
     return 'Error!';
   })
 }
-=======
 post.unfavorite = function(req, res) {
   db.removeFromFavorites(req.body)
     .then(() => {
@@ -126,7 +124,6 @@ post.starred = function(req, res) {
     })
 }
   
->>>>>>> Adds rating system
 
 module.exports.patch = patch;
 module.exports.del = del;

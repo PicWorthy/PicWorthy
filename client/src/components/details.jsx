@@ -73,14 +73,9 @@ export default class Details extends Component {
   }
 
   render() {
-<<<<<<< HEAD
-
-    const { detailedPicURL, pics, userFavorites, showHideDetails, handleStarClick } = this.props
-=======
     
     const { detailedPicURL, pics, userFavorites, showHideDetails, handleHeartClick, onStarClick} = this.props 
 
->>>>>>> Adds rating system
 
     let pic = getPic(detailedPicURL, pics);
 
@@ -104,15 +99,9 @@ export default class Details extends Component {
 
           <Row>
 
-<<<<<<< HEAD
-            <Col
-              md={ 6 }
-              mdPush={ 6 }
-=======
             <Col 
               md={ 6 } 
               mdPush={ 6 } 
->>>>>>> Adds rating system
               style={ {paddingRight: `100px`} }
             >
 
