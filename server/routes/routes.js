@@ -15,15 +15,12 @@ router.get('/api/closestPics', controller.get.closestPics);
 
 router.post('/api/favorites', controller.post.favorites);
 
-<<<<<<< HEAD
 router.delete('/api/deletePic', controller.del.deletePic);
 
 router.patch('/api/modifyPicDetails', controller.patch.modifyPicDetails);
-=======
 router.post('/api/unfavorite', controller.post.unfavorite);
 
 router.post('/api/starred', controller.post.starred);
 
->>>>>>> Adds rating system
 
 module.exports = router;

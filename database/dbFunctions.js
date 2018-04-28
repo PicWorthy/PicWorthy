@@ -93,7 +93,6 @@ db.addToFavorites = (data) =>
     {$push: { likes: data}}
   );
 
-<<<<<<< HEAD
 db.deletePic = (imageURL) => {
   console.log(imageURL);
   return models.Pictures.remove({
@@ -139,7 +138,6 @@ db.modifyUserPic = (username, imageURL, location, description) => {
   });
 }
 
-=======
 db.removeFromFavorites = (data) =>
   models.Users.update(
     {_id: data.user_id},
@@ -159,5 +157,4 @@ db.rateFavoritedPicture = (data) =>
   ).exec();
 
   
->>>>>>> Adds rating system
 module.exports = db;
