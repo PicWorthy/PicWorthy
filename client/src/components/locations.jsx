@@ -8,7 +8,7 @@ import PicRow from './picrow.jsx';
 import Details from './details.jsx';
 import fetchClosestPics from '../helpers/fetchClosestPics.jsx';
 import getUserLocation from '../helpers/getUserLocation.jsx';
-import EditPicDetails from './editPicDetails.jsx'
+import EditPicDetails from './editPicDetails.jsx';
 
 /*
  * The locations, userpage, and likes page all get rendered with the locations component
@@ -136,7 +136,6 @@ const rotatePicsLikes = function(e, direction) {
   this.setState({userData});
 }
 
-
 export default class Locations extends Component {
   constructor(props) {
     super(props);
@@ -147,7 +146,15 @@ export default class Locations extends Component {
       zoom: 4,
       position: {lat: 37.09, lng: -95.71},
       detailedPicURL: 'NONE',
-      userData: props.userData
+      userData: props.userData,
+      friendData: {
+        firstName: '',
+        lastName: '',
+        username: '',
+        user_id: '',
+        likes: [],
+        photos: []
+      }
     };
     /*
      * this is a hacky way to get the userid to work.  We had major issues passing data
@@ -184,6 +191,29 @@ export default class Locations extends Component {
     this.refreshUser();
     this.getUserLocation();
     this.updateDisplayAmount();
+
+    //Renders friend data for friendpageRender function.
+    const startIndex = this.props.pathname.indexOf('/', 1);
+    const endIndex = this.props.pathname.indexOf('/', startIndex + 1);
+    const username = this.props.pathname.slice(startIndex + 1, endIndex);
+    if (/^\/friendpage/.test(this.props.pathname)) {
+      const startIndex = this.props.pathname.indexOf('/', 1);
+      const endIndex = this.props.pathname.indexOf('/', startIndex + 1);
+      const username = this.props.pathname.slice(startIndex + 1, endIndex);
+      axios.get('/api/friend', {
+        params: {
+          username: username
+        }
+      })
+      .then(result => {
+        console.log(result.data);
+        this.setState({
+          friendData: result.data
+        });
+      })
+      .catch(err => console.log(err));
+    }
+
     window.addEventListener('resize', this.updateDisplayAmount);
   }
 
@@ -211,7 +241,7 @@ export default class Locations extends Component {
       .then((result) => this.setState({userData: result.data}));
   }
 
-  
+
   onStarClick (nextValue, prevValue, name, e) {
     const getPic = (url, pics) => {
       for (const pic of pics) {
@@ -225,7 +255,7 @@ export default class Locations extends Component {
     let pic = getPic(this.state.detailedPicURL, this.state.userData.photos);
     pic.rating = nextValue;
     let {category, location, imageURL, description, latLng, rating} = pic;
-    
+
     axios.post('/api/starred', {
       category,
       location,
@@ -242,7 +272,7 @@ export default class Locations extends Component {
       .then(({data}) => this.setState({userData: data}));
   }
 
-  
+
 
   handleHeartClick(e, { category, location, imageURL, description, latLng, rating}, beDeleted) {
     rating = rating ? rating : 0;
@@ -297,6 +327,40 @@ export default class Locations extends Component {
     const displayAmount = Math.floor((window.innerWidth - 90)/250);
     this.setState({displayAmount});
   }
+
+  friendpageRender() {
+
+    const pics = this.state.friendData.photos.slice(0, this.state.displayAmount);
+    return (
+      <div style={{minHeight: `calc(100vh - 150px)`}}>
+
+        <h1 style={{fontFamily: `billabong`, textAlign: `center`, color: `#32bfff`}}>Hello {this.state.friendData.firstName}</h1>
+        <h2 style={{fontFamily: `billabong`, textAlign: `center`, color: `#919295`}}>User's Places</h2>
+
+        { pics.length === 0 ? <div /> :
+          <PicRow
+            showHideDetails={ this.showHideDetails }
+            rowType="locations"
+            pics={ pics }
+            rotatePics={ this.rotatePics }
+            detailedPicURL={ this.state.detailedPicURL }
+          />
+        }
+
+        <br />
+
+        <Details
+          detailedPicURL={ this.state.detailedPicURL }
+          pics={ this.state.friendData.photos }
+          showHideDetails={ this.showHideDetails }
+          handleStarClick={ this.handleStarClick }
+          userFavorites={ this.state.friendData.likes }
+          refreshUser={ this.refreshUser.bind(this) }
+        />
+
+      </div>
+    )
+}
 
   userpageRender() {
 
@@ -410,6 +474,7 @@ export default class Locations extends Component {
             handleHeartClick={ this.handleHeartClick }
             userFavorites={ this.state.userData.likes }
             onStarClick={this.onStarClick}
+            username={this.state.userData.username}
           />
         </Row>
       </Grid>
@@ -418,19 +483,24 @@ export default class Locations extends Component {
 
 
   render() {
-    if (/^\/locations/.test(this.props.pathname)) {
-      return this.locationsRender();
+
+    if (/^\/friendpage/.test(this.props.pathname)) {
+      return this.friendpageRender();
 
     } else if (/^\/userpage/.test(this.props.pathname)) {
       return this.userpageRender();
 
-    } else if (/^\/likes/.test(this.props.pathname)) {
+    } else if (/^\/locations/.test(this.props.pathname)) {
+      return this.locationsRender();
+
+    }  else if (/^\/likes/.test(this.props.pathname)) {
       return this.likesRender();
 
     } else {
       return <div>PAGE NOT FOUND</div>
 
     }
+
   }
 }
 

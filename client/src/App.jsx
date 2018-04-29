@@ -10,15 +10,14 @@ import Locations from './components/locations.jsx';
 import Upload from './components/upload.jsx';
 import Footer from './components/footer.jsx';
 
-
 export default class App extends Component {
 
   constructor(props) {
     super(props);
-    
+
     this.state = {
       userPromise: axios.get('/api/user'),
-      
+
       userData: {
         firstName: '',
         lastName: '',
@@ -47,13 +46,12 @@ export default class App extends Component {
     this.navbarHandleShowLogin = this.navbarHandleShowLogin.bind(this);
 
     axios.get('/api/user')
-      .then((result) => 
+      .then((result) =>
         this.setState({userData: result.data}));
   }
-  
-  //
+
   navbarHandleClose() {
-    this.setState({ 
+    this.setState({
       showLogin: false,
       showSignup: false
     });
@@ -64,14 +62,14 @@ export default class App extends Component {
   }
 
   navbarHandleShowSignup() {
-    this.setState({ 
+    this.setState({
       showSignup : true,
       showLogin: false
     });
   }
 
   navbarHandleShowLogin() {
-    this.setState({ 
+    this.setState({
       showSignup : false,
       showLogin: true
     });
@@ -82,10 +80,10 @@ export default class App extends Component {
     const userData = this.state.userData;
 
     return (
-    
+
       <div style={{backgroundColor: "#fdfdfd"}}>
 
-        <NavbarComp 
+        <NavbarComp
           userData={userData}
           showLogin={this.state.showLogin}
           showSignup={this.state.showSignup}
@@ -95,35 +93,35 @@ export default class App extends Component {
           handleShowSignup={this.navbarHandleShowSignup}
           handleShowLogin={this.navbarHandleShowLogin}
         />
-            
+
         <Switch>
           <Route
             exact path='/'
             component={ Landing }
           />
-          
-          <Route 
-            path='/upload' 
-            render={(props) => 
-              <Upload 
+
+          <Route
+            path='/upload'
+            render={(props) =>
+              <Upload
                 userData={ userData }
                 userPromise={ userPromise }
               />
             }
           />
 
-          <Route 
-            path='/' 
+          <Route
+            path='/'
             render={(props) => {
               return (
-                <Locations 
+                <Locations
                   userPromise={ userPromise }
                   userData={ userData }
                   pathname={ props.location.pathname }
                 />
               )
             }
-          } 
+          }
           />
         </Switch>
         <Footer />

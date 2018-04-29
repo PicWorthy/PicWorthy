@@ -23,4 +23,6 @@ router.post('/api/unfavorite', controller.post.unfavorite);
 router.post('/api/starred', controller.post.starred);
 
 
+router.get('/api/friend', controller.get.friend);
+
 module.exports = router;
