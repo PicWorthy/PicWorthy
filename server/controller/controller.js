@@ -125,6 +125,13 @@ post.starred = function(req, res) {
 }
   
 
+get.friend = (req, res) => {
+  if(req.query.username) {
+    db.fetchUser(req.query.username).then(friend => res.json(friend));
+  }
+}
+
+
 module.exports.patch = patch;
 module.exports.del = del;
 module.exports.get = get;

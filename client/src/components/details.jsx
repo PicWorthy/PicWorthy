@@ -110,7 +110,8 @@ export default class Details extends Component {
               </h1>
 
               <h4>
-                Submitted by: { pic.username }
+                Submitted by: {pic.username === this.props.username ? <a href="/userpage">{pic.username}</a> :
+                  <a href={"/friendpage/" + pic.username} >{pic.username}</a>}
               </h4>
 
               <p>
