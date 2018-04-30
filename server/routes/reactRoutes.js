@@ -12,6 +12,7 @@
 
 const reactRoutes = [
   '/',
+  'trending',
   '/locations',
   '/upload',
   '/userpage',

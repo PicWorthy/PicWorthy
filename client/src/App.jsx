@@ -9,6 +9,7 @@ import Landing from './components/landing.jsx'
 import Locations from './components/locations.jsx';
 import Upload from './components/upload.jsx';
 import Footer from './components/footer.jsx';
+import Trending from './components/trending.jsx';
 
 export default class App extends Component {
 
@@ -18,6 +19,8 @@ export default class App extends Component {
     this.state = {
       userPromise: axios.get('/api/user'),
 
+      trendingPromise: axios.get('/api/trending'),
+      
       userData: {
         firstName: '',
         lastName: '',
@@ -26,6 +29,12 @@ export default class App extends Component {
         likes: [],
         photos: []
       },
+
+      trending: [],
+
+      detailedPicURL: 'NONE',
+      zoom: '',
+      position: '',
 
       showLogin: false,
       showSignup: false,
@@ -44,12 +53,42 @@ export default class App extends Component {
     this.navbarHandleShow = this.navbarHandleShow.bind(this);
     this.navbarHandleShowSignup = this.navbarHandleShowSignup.bind(this);
     this.navbarHandleShowLogin = this.navbarHandleShowLogin.bind(this);
+    this.handleState = this.handleState.bind(this);
 
-    axios.get('/api/user')
-      .then((result) =>
-        this.setState({userData: result.data}));
+    const getuserData = function() {
+      return axios.get('/api/user')
+    }
+
+    const getTrendingData = function(){
+      return axios.get('/api/trending')
+    }
+    
+    axios.all([getuserData(), getTrendingData()])
+      .then(axios.spread( (user, trending) => {
+        this.setState({
+          userData: user.data,
+          trending: trending.data
+        })
+      }))
+      .catch(function(error){
+        console.log(error);
+      })
   }
 
+
+  handleState(detailedPicURL, data, trending){
+    if (data === null && trending === null){
+      this.setState({
+        detailedPicURL: detailedPicURL
+       });
+    } else if (detailedPicURL === null && trending === null){
+      this.setState({userData: data})
+    } else if (detailedPicURL === null && data === null){
+      this.setState({trending: trending})
+    }
+  }
+  
+  
   navbarHandleClose() {
     this.setState({
       showLogin: false,
@@ -78,6 +117,7 @@ export default class App extends Component {
   render() {
     const userPromise = this.state.userPromise;
     const userData = this.state.userData;
+    const trendingPromise = this.state.trendingPromise;
 
     return (
 
@@ -110,8 +150,27 @@ export default class App extends Component {
             }
           />
 
-          <Route
-            path='/'
+          <Route path='/trending'
+            render={(props) => 
+              <Trending
+                trending = {this.state.trending}
+                detailedPicURL = {this.state.detailedPicURL}
+                showLogin={this.state.showLogin}
+                showSignup={this.state.showSignup}
+                activeModal={this.state.activeModal}
+                handleClose={this.navbarHandleClose}
+                handleShow={this.navbarHandleShow}
+                handleShowSignup={this.navbarHandleShowSignup}
+                handleShowLogin={this.navbarHandleShowLogin}
+                handleState={this.handleState}
+                pathname = {props.location.pathname}
+                userData = { userData }
+              />
+            }
+          />
+
+          <Route 
+            path='/' 
             render={(props) => {
               return (
                 <Locations

@@ -18,9 +18,12 @@ router.post('/api/favorites', controller.post.favorites);
 router.delete('/api/deletePic', controller.del.deletePic);
 
 router.patch('/api/modifyPicDetails', controller.patch.modifyPicDetails);
+
 router.post('/api/unfavorite', controller.post.unfavorite);
 
 router.post('/api/starred', controller.post.starred);
+
+router.get('/api/trending', controller.get.trending);
 
 
 router.get('/api/friend', controller.get.friend);
