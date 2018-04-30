@@ -16,6 +16,16 @@ const PicRow = ({ pics, rotatePics,showHideDetails, detailedPicURL }) => {
     />
   ));
 
+  // const rotateLeft = (e) => {
+  //   rotatePics(e, 'LEFT');
+  //   this.props.refreshUser();
+  // };
+
+  // const rotateRight = (e) => {
+  //   rotatePics(e, 'RIGHT');
+  //   this.props.refreshUser();
+  // };
+
   return (
     <div style={{textAlign: `center`}}>
       <a href='#'><FaChevronLeft

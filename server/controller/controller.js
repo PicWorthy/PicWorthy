@@ -136,6 +136,16 @@ get.friend = (req, res) => {
   }
 }
 
+patch.comments = function(req, res) {
+  db.addComments(req.body)
+    .then(() => {
+      db.commentUser(req.body);
+    })
+    .catch(error => {
+      console.log('error in server\'s patch comment!');
+    })
+}
+
 
 module.exports.patch = patch;
 module.exports.del = del;

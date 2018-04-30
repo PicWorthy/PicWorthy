@@ -27,7 +27,12 @@ const PictureSchema = new mongoose.Schema({
       index: '2dsphere'
       
     }
-  }
+  },
+  comments: [{
+    username: String,
+    message: String,
+    createdAt: Date
+  }]
 });
 
 module.exports.UserSchema = UserSchema;
