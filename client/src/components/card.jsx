@@ -62,7 +62,7 @@ Card.propTypes = {
     location: PropTypes.string,
     imageURL: PropTypes.string
   }).isRequired,
-  showDetails: PropTypes.func.isRequired,
+  showHideDetails: PropTypes.func.isRequired,
   selected: PropTypes.func.isRequired
 }
 

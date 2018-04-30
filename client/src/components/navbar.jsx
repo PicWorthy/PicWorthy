@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Navbar, NavItem, MenuItem, Nav, NavDropdown, FormGroup, FormControl, Button } from 'react-bootstrap';
-import FaIconPack, {FaStar, FaHome, FaPlus} from 'react-icons/lib/fa';
+import FaIconPack, {FaStar, FaHome, FaPlus, FaLineChart} from 'react-icons/lib/fa';
 import { Link } from 'react-router-dom';
 import Login from './login.jsx';
 import Signup from './signup.jsx';
@@ -65,6 +65,12 @@ const Name = (props) => {
         <NavItem eventKey={ 1 }>
           <Link to='/locations'>
             <FaHome size={ 20 } />
+          </Link>
+        </NavItem>
+        
+        <NavItem eventKey={ 5 }>
+          <Link to='/trending'>
+            <FaLineChart size={ 20 } />
           </Link>
         </NavItem>
         

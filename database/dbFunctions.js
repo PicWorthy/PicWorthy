@@ -156,5 +156,14 @@ db.rateFavoritedPicture = (data) =>
     {'likes.$.rating': data.rating}
   ).exec();
 
+db.findTrending = (cb) =>
+  models.Users.find({photos: {$elemMatch: {rating:{ $lte: 5}}}}, function(err, data){
+    if(err){
+      console.log(err)
+    } else {
+      cb(data) 
+    }
+  })
+
   
 module.exports = db;

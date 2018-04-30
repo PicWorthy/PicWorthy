@@ -111,7 +111,6 @@ post.unfavorite = function(req, res) {
 }
 
 post.starred = function(req, res) {
-  console.log(req.body);
   db.rateFavoritedPicture(req.body)
     .then(() => {
       db.rateUnfavoritedPicture(req.body);
@@ -122,6 +121,12 @@ post.starred = function(req, res) {
     .then((data) => {
       res.json(data);
     })
+}
+
+get.trending = function(req, res){
+  db.findTrending(function(data){
+    res.json(data);
+  })
 }
   
 

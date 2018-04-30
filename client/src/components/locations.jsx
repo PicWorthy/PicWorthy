@@ -386,10 +386,10 @@ export default class Locations extends Component {
 
         <EditPicDetails
           detailedPicURL={ this.state.detailedPicURL }
-          pics={ this.state.userData.photos }
+          pics={ this.state.userData.photos  }
+          userFavorites = {this.state.userData.likes}
           showHideDetails={ this.showHideDetails }
           handleHeartClick={ this.handleHeartClick }
-          userFavorites={ this.state.userData.likes }
           refreshUser={ this.refreshUser.bind(this) }
           onStarClick={this.onStarClick}
         />
