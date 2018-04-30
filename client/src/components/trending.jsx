@@ -8,10 +8,10 @@ const rowStyle = {
     marginLeft: `0px`,
     marginRight: `0px`
   }
-  
-  
-  
-  
+
+
+
+
   export default class Trending extends Component {
     constructor(props){
       super(props);
@@ -21,22 +21,22 @@ const rowStyle = {
       this.onStarClick = this.onStarClick.bind(this);
       this.handleHeartClick = this.handleHeartClick.bind(this);
   }
-  
+
   showHideDetails(e, imageURL) {
       if (e.preventDefault !== undefined) {
         e.preventDefault();
       }
-    
+
       if (this.props.detailedPicURL === imageURL) {
         const detailedPicURL = 'NONE';
-    
+
         window.scrollTo({
           top: 0,
           behavior: 'smooth'
         })
-    
+
         setTimeout(() => this.props.handleState(detailedPicURL, null, null), 322);
-    
+
       } else {
         /* this reg ex is a
          * last minute hack to eliminate bug.
@@ -44,20 +44,30 @@ const rowStyle = {
          * with this component cleaner.
          *
          */
-    
+
         if (/^\/trending/.test(this.props.pathname)) {
           var detailedPicURL = imageURL;
           this.props.handleState(
             detailedPicURL, null, null
           );
         }
-    
+
       }
   }
 
+  componentDidMount() {
+    axios.get('/api/trending')
+      .then(result => {
+        console.log(result.data);
+        this.props.handleState(null, null, result.data);
+      })
+      .catch(err => console.log(err));
+    }
+
+
   handleHeartClick (e, { category, location, imageURL, description, latLng, rating}, beDeleted) {
     rating = rating ? rating : 0;
-  
+
     if(beDeleted){
       axios.post('/api/unfavorite', {
         category,
@@ -104,7 +114,7 @@ const rowStyle = {
     let pic = getPic(this.props.detailedPicURL, this.props.userData.photos);
     pic.rating = nextValue;
     let {category, location, imageURL, description, latLng, rating} = pic;
-    
+
     axios.post('/api/starred', {
       category,
       location,
@@ -121,40 +131,40 @@ const rowStyle = {
       .then(({data}) => this.handleState(null, data, null));
   }
 
-   
+
   rotatePics (e, direction) {
-  
+
       e.preventDefault();
-    
+
       let pics = [...this.props.pics];
-    
+
       if (direction === 'LEFT') {
         pics.unshift(pics.pop());
-    
+
       } else if (direction === 'RIGHT') {
         pics.push(pics.shift());
       }
-    
+
       handleState(null, null, trending);
   }
-  
+
 
   render(){
 
         const pics = [];
-        
+
         this.props.trending.forEach( object => object.photos.forEach( photo => pics.push(photo)));
-        
+
 
 
         return (
             <div style={{minHeight: `calc(100vh - 150px)`}}>
               <div>
-      
+
               <h1 style={{fontFamily: `billabong`, textAlign: `center`, color: `#32bfff`}}>What's Trending?</h1>
               <br />
               </div>
-      
+
               { this.props.trending.length === 0 ? <div /> :
                 <PicRow
                   showHideDetails={ this.showHideDetails }
@@ -164,9 +174,9 @@ const rowStyle = {
                   detailedPicURL={ this.props.detailedPicURL }
                 />
               }
-      
+
               <br/>
-      
+
               <Details
                 detailedPicURL={ this.props.detailedPicURL }
                 pics={ pics }
