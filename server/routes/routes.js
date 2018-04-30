@@ -28,4 +28,6 @@ router.get('/api/trending', controller.get.trending);
 
 router.get('/api/friend', controller.get.friend);
 
+router.patch('/api/comments', controller.patch.comments);
+
 module.exports = router;

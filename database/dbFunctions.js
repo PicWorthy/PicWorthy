@@ -56,7 +56,8 @@ db.savePicture = function (data) {
     loc: {
       type: 'Point',
       coordinates: [data.latLng.lng, data.latLng.lat]
-    }
+    },
+    comments: data.comments
   });
 
   return newPic.save();
@@ -165,5 +166,34 @@ db.findTrending = (cb) =>
     }
   })
 
+db.addComments = (data) => {
+  return models.Pictures.update(
+    {
+      user_id: data.user_id,
+      imageURL: data.imageURL,
+    },
+    {$set: {comments: data.comments}}
+  );
+}
+
+db.commentUser = (data) => {
+  models.Users.update({_id: data.user_id, 'likes.imageURL': data.imageURL}, {$set:
+    {
+      'likes.$.comments': data.comments
+    }}, function(err) {
+      if (err) {
+        console.log('Got an error!');
+      }
+    }
+  );
+  return models.Users.update({_id: data.user_id, 'photos.imageURL': data.imageURL}, {$set: 
+    {
+      'photos.$.comments': data.comments
+    }}, function(err) {
+      if (err) {
+        console.log('Got an error!');
+      }
+    });
+}
   
 module.exports = db;

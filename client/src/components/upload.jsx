@@ -30,7 +30,8 @@ export default class Upload extends Component {
       submitted: '',
       loading: false,
       latLng: {lat: null, lng: null},
-      uploadStatus: []
+      uploadStatus: [],
+      comments: []
     };
 
     /*
@@ -113,7 +114,8 @@ export default class Upload extends Component {
       description,
       user_id: this.props.userData._id,
       username: this.props.userData.username,
-      latLng
+      latLng,
+      comments: this.props.comments
     })
     
       .then(res => {

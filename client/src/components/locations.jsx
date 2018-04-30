@@ -254,7 +254,7 @@ export default class Locations extends Component {
 
     let pic = getPic(this.state.detailedPicURL, this.state.userData.photos);
     pic.rating = nextValue;
-    let {category, location, imageURL, description, latLng, rating} = pic;
+    let {category, location, imageURL, description, latLng, rating, comments} = pic;
 
     axios.post('/api/starred', {
       category,
@@ -267,14 +267,15 @@ export default class Locations extends Component {
       latLng: {
         lat: latLng.lat,
         lng: latLng.lng
-      }
+      },
+      comments
     })
       .then(({data}) => this.setState({userData: data}));
   }
 
 
 
-  handleHeartClick(e, { category, location, imageURL, description, latLng, rating}, beDeleted) {
+  handleHeartClick(e, { category, location, imageURL, description, latLng, rating, comments}, beDeleted) {
     rating = rating ? rating : 0;
 
     if(beDeleted){
@@ -289,7 +290,8 @@ export default class Locations extends Component {
         latLng: {
           lat: latLng.lat,
           lng: latLng.lng
-        }
+        },
+        comments
       })
         .then(({data}) => this.setState({userData: data}))
     } else {
@@ -304,7 +306,8 @@ export default class Locations extends Component {
         latLng: {
           lat: latLng.lat,
           lng: latLng.lng
-        }
+        },
+        comments
       })
         .then(({data}) => this.setState({userData: data}))
     }
@@ -427,6 +430,7 @@ export default class Locations extends Component {
           showHideDetails={ this.showHideDetails }
           handleHeartClick={ this.handleHeartClick }
           userFavorites={ this.state.userData.likes }
+          refreshUser={this.refreshUser.bind(this)}
           onStarClick={this.onStarClick}
         />
       </div>
@@ -462,6 +466,7 @@ export default class Locations extends Component {
               pics={ pics }
               rotatePics={ this.rotatePics }
               detailedPicURL={ this.state.detailedPicURL }
+              refreshUser={this.refreshUser.bind(this)}
             />
           }
         </Row>
@@ -475,6 +480,7 @@ export default class Locations extends Component {
             userFavorites={ this.state.userData.likes }
             onStarClick={this.onStarClick}
             username={this.state.userData.username}
+            refreshUser={this.refreshUser.bind(this)}
           />
         </Row>
       </Grid>

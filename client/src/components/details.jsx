@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import FaIconPack, {FaHeartO, FaHeart, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
 import StarRatingComponent from 'react-star-rating-component';
+import Comments from './comments.jsx';
 
 const getPic = (url, pics) => {
   for (const pic of pics) {
@@ -177,6 +178,11 @@ export default class Details extends Component {
           </Row>
         </Grid>
         <br />
+
+        <Comments 
+          pic={pic}
+          refreshUser={this.props.refreshUser.bind(this)}
+        />
 
         <div
           ref={ (el) => this.scrollEnd = el  }
