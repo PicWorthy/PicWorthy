@@ -12,7 +12,7 @@ const CommentsRender = (props) => {
         }}>
           {props.this.props.pic.comments.map(comment => 
             <div>
-              <h5>{comment.username} {moment(comment.createdAt).fromNow()}</h5>
+              <h5>{comment.username} ({moment(comment.createdAt).fromNow()}):</h5>
               <h5><div>{comment.message}</div></h5>
             </div>
           )}
@@ -43,6 +43,26 @@ export default class Details extends Component {
   }
 
   handleCommentClick() {
+    console.log('entered handleCommentClick');
+
+    // axios.patch('/api/comments', {
+    //   user_id: this.props.pic.user_id,
+    //   comments: commentsArray,
+    //   imageURL: this.props.pic.imageURL
+    // })
+    //   .then(() => {
+    //     console.log('returning after updating photo!');
+    //     // callback();
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+
+    // this.props.refreshUser();
+
+
+
+
     let comment;
     if (this.state.message !== '') {
       comment = {
@@ -64,25 +84,30 @@ export default class Details extends Component {
   updatePhotoComments(comment) {
     console.log(this);
     let commentsArray;
-    if (this.props.pic.comments) {
+    if (Array.isArray(this.props.pic.comments)) {
       this.props.pic.comments.push(comment);
       commentsArray = this.props.pic.comments.slice();
     } else {
       commentsArray = [];
       commentsArray.push(comment);
+      this.props.pic.comments = commentsArray.slice();
     }
     axios.patch('/api/comments', {
       user_id: this.props.pic.user_id,
       comments: commentsArray,
       imageURL: this.props.pic.imageURL
     })
-      // .then((data) => {
-      //   console.log('data returned after updating photo: ', data);
-      //   callback();
-      // })
+      .then(() => {
+        console.log('returning after updating photo!');
+        // callback();
+      })
       .catch(error => {
         console.log(error);
       });
+
+      // this.props.pic.comments has already been changed in the code above
+      // this.props.refreshUser();
+      // window.location.reload(true);
   }
 
   render() {
