@@ -439,7 +439,7 @@ export default class Locations extends Component {
 
   //This is renders the view that includes the map and Around You section.
   locationsRender() {
-    const pics = this.state.pics.slice(0, this.state.displayAmount);
+    const pics = this.state.userData.photos.slice(0, this.state.displayAmount);
     return (
       <Grid style={{margin: `0`, width: `100vw`, paddingLeft: `0px`, paddingRight: `0px`, minHeight: `calc(100vh - 150px)`}}>
 

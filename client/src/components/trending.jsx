@@ -55,17 +55,7 @@ const rowStyle = {
       }
   }
 
-  componentDidMount() {
-    axios.get('/api/trending')
-      .then(result => {
-        console.log(result.data);
-        this.props.handleState(null, null, result.data);
-      })
-      .catch(err => console.log(err));
-    }
-
-
-  handleHeartClick (e, { category, location, imageURL, description, latLng, rating}, beDeleted) {
+  handleHeartClick (e, { category, location, imageURL, description, latLng, rating, comments}, beDeleted) {
     rating = rating ? rating : 0;
 
     if(beDeleted){
@@ -80,9 +70,10 @@ const rowStyle = {
         latLng: {
           lat: latLng.lat,
           lng: latLng.lng
-        }
+        },
+        comments
       })
-        .then(({data}) => this.handleState(null, data, null))
+        .then(({data}) => this.props.handleState(null, data, null))
     } else {
       axios.post('/api/favorites', {
         category,
@@ -95,9 +86,10 @@ const rowStyle = {
         latLng: {
           lat: latLng.lat,
           lng: latLng.lng
-        }
+        },
+        comments
       })
-        .then(({data}) => this.handleState(null, data, null))
+        .then(({data}) => this.props.handleState(null, data, null))
     }
   }
 
@@ -113,8 +105,8 @@ const rowStyle = {
 
     let pic = getPic(this.props.detailedPicURL, this.props.userData.photos);
     pic.rating = nextValue;
-    let {category, location, imageURL, description, latLng, rating} = pic;
-
+    let {category, location, imageURL, description, latLng, rating, comments} = pic;
+    
     axios.post('/api/starred', {
       category,
       location,
@@ -126,9 +118,10 @@ const rowStyle = {
       latLng: {
         lat: latLng.lat,
         lng: latLng.lng
-      }
+      },
+      comments
     })
-      .then(({data}) => this.handleState(null, data, null));
+      .then(({data}) => this.props.handleState(null, data, null));
   }
 
 
@@ -144,10 +137,14 @@ const rowStyle = {
       } else if (direction === 'RIGHT') {
         pics.push(pics.shift());
       }
-
-      handleState(null, null, trending);
+    
+      this.props.handleState(null, null, trending);
   }
-
+  
+  refreshUser() {
+    axios.get('/api/user')
+      .then(result => this.props.handleState(null, result.data, null));
+  }
 
   render(){
 
@@ -184,6 +181,7 @@ const rowStyle = {
                 handleHeartClick={ this.handleHeartClick }
                 userFavorites={ this.props.userData.likes }
                 onStarClick={this.onStarClick}
+                refreshUser={this.refreshUser.bind(this)}
               />
             </div>
           )
