@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
-import FaIconPack, {FaStarO, FaStar, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
-
+import FaIconPack, {FaHeartO, FaHeart, FaFacebookSquare, FaTwitter, FaYelp, FaInstagram} from 'react-icons/lib/fa';
+import StarRatingComponent from 'react-star-rating-component';
+import Comments from './comments.jsx';
 
 const getPic = (url, pics) => {
   for (const pic of pics) {
@@ -12,21 +13,25 @@ const getPic = (url, pics) => {
   return 'NOT_FOUND';
 }
 
-const DisplayStar = ({ pic, handleStarClick, isStarred }) => {
+const DisplayStar = ({ pic, handleHeartClick, isStarred }) => {
   if (isStarred) {
+    console.log(pic);
     return (
-      <FaStar 
+      <FaHeart 
+        starred='true'
         style={ iconStyle } 
         size={ 40 }
+        onClick={ (e) => handleHeartClick(e, pic, true) }
       />
     )
-  
+
   } else {
     return (
-      <FaStarO
+      <FaHeartO
+        starred='false'
         style={ iconStyle } 
         size={ 40 } 
-        onClick={ (e) => handleStarClick(e, pic) } 
+        onClick={ (e) => handleHeartClick(e, pic, false) } 
       /> 
     );
   }
@@ -61,7 +66,7 @@ export default class Details extends Component {
     // not sure if I like this scroll down
     // this.scrollEnd.scrollIntoView({behavior: 'smooth'});
   }
-  
+
   componentDidUpdate(prevProps) {
     if (prevProps.detailedPicURL === 'NONE' && this.props.detailedPicURL !== 'NONE') {
       this.scrollToBottom();
@@ -70,7 +75,8 @@ export default class Details extends Component {
 
   render() {
     
-    const { detailedPicURL, pics, userFavorites, showHideDetails, handleStarClick } = this.props 
+    const { detailedPicURL, pics, userFavorites, showHideDetails, handleHeartClick, onStarClick} = this.props 
+
 
     let pic = getPic(detailedPicURL, pics);
 
@@ -80,82 +86,105 @@ export default class Details extends Component {
 
     const isStarred = checkFavorites(userFavorites.map((p) => p.imageURL), pic.imageURL)
 
+    const {rating} = pic;
 
     return (
       <div>
         <br/>
-        
+
         <Grid style={ {
-          background: `linear-gradient(to right, #4cc7ff 0%, #99dfff  100%)`, 
-          padding: `20px`, 
+          background: `linear-gradient(to right, #4cc7ff 0%, #99dfff  100%)`,
+          padding: `20px`,
           width: `100vw`
         } }>
-        
+
           <Row>
-        
+
             <Col 
               md={ 6 } 
               mdPush={ 6 } 
               style={ {paddingRight: `100px`} }
             >
-        
+
               <h1 style={ {fontFamily: `billabong`} }>
                 {pic.location }
               </h1>
-        
+
               <h4>
-                Submitted by: { pic.username }
+                Submitted by: {pic.username === this.props.username ? <a href="/userpage">{pic.username}</a> :
+                  <a href={"/friendpage/" + pic.username} >{pic.username}</a>}
               </h4>
-        
+
               <p>
-                { pic.description } 
+                { pic.description }
               </p>
-        
+
               <br />
-        
+
               <DisplayStar
                 pic={ pic }
-                handleStarClick={ handleStarClick }
+                handleHeartClick={ handleHeartClick }
                 isStarred={ isStarred }
               />
               {/*
-              <FaInstagram 
-                style={ iconStyle}  
-                size={ 30 } 
+              <FaInstagram
+                style={ iconStyle}
+                size={ 30 }
               />
-              <FaFacebookSquare 
-                style={ iconStyle } 
-                size={ 30 } 
-              /> 
-              <FaTwitter 
-                style={ iconStyle } 
-                size={ 30 } 
+              <FaFacebookSquare
+                style={ iconStyle }
+                size={ 30 }
               />
-              <FaYelp 
-                style={ iconStyle } 
-                size={ 30 } 
+              <FaTwitter
+                style={ iconStyle }
+                size={ 30 }
+              />
+              <FaYelp
+                style={ iconStyle }
+                size={ 30 }
               />
               */}
             </Col>
-            
-            <Col 
-              md={ 6 } 
+
+            <Col
+              md={ 6 }
               mdPull={ 6 }
             >
-            
+
               <span style={ imgSpanStyle }>
-            
-                <img 
-                  src={ pic.imageURL } 
+
+                <img
+                  src={ pic.imageURL }
                   style ={ imgStyle }
                 />
               </span>
             </Col>
           </Row>
+
+          <Row>
+            <Col md ={6}
+                 mdOffset={6}
+            >
+            <h4>
+              Rating:
+            </h4>
+              <StarRatingComponent
+                  name='picrating' /* name of the radio input, it is required */
+                  value={ rating } /* number of selected icon (`0` - none, `1` - first) */
+                  starCount={ 5 } /* number of icons in rating, default `5` */
+                  onStarClick={ onStarClick } /* on icon click handler */
+              />
+            </Col>
+          </Row>
         </Grid>
         <br />
-        
-        <div 
+
+        <Comments 
+          pic={pic}
+          refreshUser={this.props.refreshUser.bind(this)}
+        />
+
+        <div
           ref={ (el) => this.scrollEnd = el  }
         />
       </div>

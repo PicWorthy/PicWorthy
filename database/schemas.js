@@ -6,7 +6,8 @@ const UserSchema = mongoose.Schema({
   username: String,
   password: String,
   photos: [{}],
-  likes: [{}]
+  likes: [{}],
+  ratings: [{}],
 });
 
 const PictureSchema = new mongoose.Schema({
@@ -26,7 +27,12 @@ const PictureSchema = new mongoose.Schema({
       index: '2dsphere'
       
     }
-  }
+  },
+  comments: [{
+    username: String,
+    message: String,
+    createdAt: Date
+  }]
 });
 
 module.exports.UserSchema = UserSchema;

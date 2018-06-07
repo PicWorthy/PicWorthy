@@ -38,6 +38,7 @@
     "imgur": "^0.2.1",
     "imgur-uploader": "^4.2.1",
     "lodash": "^4.17.5",
+    "moment": "^2.22.1",
     "mongodb-memory-server": "^1.7.3",
     "mongoose": "^5.0.14",
     "mongoose-geojson-schema": "^2.1.2",
@@ -58,7 +59,8 @@
     "react-password-mask": "^3.3.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-spinners": "^0.3.2"
+    "react-spinners": "^0.3.2",
+    "react-star-rating-component": "^1.4.1"
   },
   "devDependencies": {
     "babel": "^6.23.0",

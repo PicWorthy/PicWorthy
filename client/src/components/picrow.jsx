@@ -6,27 +6,37 @@ import Card from './card.jsx';
 
 
 const PicRow = ({ pics, rotatePics,showHideDetails, detailedPicURL }) => {
-    
+
   const cards = pics.map((pic, i) => (
-    <Card 
-      key={i} 
-      showHideDetails={ showHideDetails } 
+    <Card
+      key={i}
+      showHideDetails={ showHideDetails }
       picDetails={pic}
       selected={ pic.imageURL === detailedPicURL }
     />
   ));
 
+  // const rotateLeft = (e) => {
+  //   rotatePics(e, 'LEFT');
+  //   this.props.refreshUser();
+  // };
+
+  // const rotateRight = (e) => {
+  //   rotatePics(e, 'RIGHT');
+  //   this.props.refreshUser();
+  // };
+
   return (
     <div style={{textAlign: `center`}}>
       <a href='#'><FaChevronLeft
-        onClick={(e) => rotatePics(e, 'LEFT')} 
+        onClick={(e) => rotatePics(e, 'LEFT')}
         style={chevronStyle}
       /></a>
-      
+
       { cards }
-      
+
       <a href='#'><FaChevronRight
-        onClick={(e) => rotatePics(e, 'RIGHT')} 
+        onClick={(e) => rotatePics(e, 'RIGHT')}
         style={chevronStyle}
       /></a>
       <br/>
